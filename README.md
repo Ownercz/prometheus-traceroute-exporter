@@ -1,5 +1,12 @@
 # Prometheus Traceroute Exporter
 
+[![GitHub Build](https://img.shields.io/github/actions/workflow/status/ownercz/prometheus-traceroute-exporter/docker-image.yml?branch=main&label=github%20build)](https://github.com/ownercz/prometheus-traceroute-exporter/actions/workflows/docker-image.yml)
+[![Gitea Workflow](https://img.shields.io/badge/gitea-workflow%20enabled-609926?logo=gitea&logoColor=white)](https://git.lipovcan.cz/Ownercz/prometheus-traceroute-exporter)
+[![Docker Image](https://img.shields.io/badge/docker-ownercz%2Fprometheus--traceroute--exporter-2496ED?logo=docker&logoColor=white)](https://hub.docker.com/r/ownercz/prometheus-traceroute-exporter)
+[![Python](https://img.shields.io/badge/python-3.12-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![Prometheus](https://img.shields.io/badge/prometheus-exporter-E6522C?logo=prometheus&logoColor=white)](https://prometheus.io/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 This is a Prometheus exporter that runs periodic traceroute-like checks using `mtr` and exposes hop metrics on `/metrics`.
 
 > Disclosure: This project was LLM-created by Ownercz - Radim Lipovčan.
