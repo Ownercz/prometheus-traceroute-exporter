@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import argparse
+import json
 import logging
 import os
 import signal
@@ -151,6 +152,7 @@ def load_config(path: str) -> ExporterConfig:
     default_mtr = _load_mtr(global_cfg.get("mtr"), MTRSettings())
 
     targets: list[TargetConfig] = []
+    seen_names: set[str] = set()
     for idx, item in enumerate(data.get("targets", []) or []):
         if not isinstance(item, dict):
             raise ValueError(f"Invalid target at index {idx}: expected object")
@@ -161,6 +163,9 @@ def load_config(path: str) -> ExporterConfig:
             raise ValueError(f"Target at index {idx} has no name")
         if not host:
             raise ValueError(f"Target '{name}' has no host")
+        if name in seen_names:
+            raise ValueError(f"Duplicate target name '{name}' in configuration")
+        seen_names.add(name)
 
         interval = max(1, _as_int(item.get("interval_seconds"), default_interval))
         mtr = _load_mtr(item.get("mtr"), default_mtr)
@@ -270,7 +275,7 @@ class TracerouteCollector:
                 check=True,
                 timeout=(target.mtr.report_cycles * target.mtr.timeout_seconds) + 10,
             )
-            data = yaml.safe_load(proc.stdout)
+            data = json.loads(proc.stdout)
             if not isinstance(data, dict):
                 raise ValueError("mtr output did not produce a valid JSON object")
 
@@ -281,7 +286,12 @@ class TracerouteCollector:
             TARGET_HOP_COUNT.labels(target=target.name).set(len(hops))
             TARGET_LAST_SUCCESS_UNIX.labels(target=target.name).set(time.time())
         except Exception as exc:
-            LOGGER.warning("Failed to scrape target=%s error=%s", target.name, exc)
+            LOGGER.warning(
+                "Failed to scrape target=%s error=%s stderr=%s",
+                target.name,
+                exc,
+                (locals().get("proc").stderr.strip()[:500] if "proc" in locals() and getattr(proc, "stderr", None) else ""),
+            )
             TARGET_UP.labels(target=target.name).set(0)
             TARGET_HOP_COUNT.labels(target=target.name).set(0)
             SCRAPE_ERRORS_TOTAL.labels(target=target.name).inc()
@@ -292,14 +302,39 @@ class TracerouteCollector:
     def _clear_hop_metrics(self, target: str) -> None:
         previous = self._seen_labels.get(target, set())
         for hop, hop_number in previous:
-            PING.remove(target, hop, hop_number)
-            AVG.remove(target, hop, hop_number)
-            BEST.remove(target, hop, hop_number)
-            WORST.remove(target, hop, hop_number)
-            STDEV.remove(target, hop, hop_number)
-            LOSS_RATIO.remove(target, hop, hop_number)
-            SENT.remove(target, hop, hop_number)
+            self._safe_remove_hop_series(target, hop, hop_number)
         self._seen_labels[target] = set()
+
+    @staticmethod
+    def _safe_remove_hop_series(target: str, hop: str, hop_number: str) -> None:
+        try:
+            PING.remove(target, hop, hop_number)
+        except KeyError:
+            pass
+        try:
+            AVG.remove(target, hop, hop_number)
+        except KeyError:
+            pass
+        try:
+            BEST.remove(target, hop, hop_number)
+        except KeyError:
+            pass
+        try:
+            WORST.remove(target, hop, hop_number)
+        except KeyError:
+            pass
+        try:
+            STDEV.remove(target, hop, hop_number)
+        except KeyError:
+            pass
+        try:
+            LOSS_RATIO.remove(target, hop, hop_number)
+        except KeyError:
+            pass
+        try:
+            SENT.remove(target, hop, hop_number)
+        except KeyError:
+            pass
 
     def _update_hop_metrics(self, target: str, hops: list[dict[str, Any]]) -> None:
         active_labels: set[tuple[str, str]] = set()
@@ -333,13 +368,7 @@ class TracerouteCollector:
         previous = self._seen_labels.get(target, set())
         stale = previous - active_labels
         for hop_label, hop_number_label in stale:
-            PING.remove(target, hop_label, hop_number_label)
-            AVG.remove(target, hop_label, hop_number_label)
-            BEST.remove(target, hop_label, hop_number_label)
-            WORST.remove(target, hop_label, hop_number_label)
-            STDEV.remove(target, hop_label, hop_number_label)
-            LOSS_RATIO.remove(target, hop_label, hop_number_label)
-            SENT.remove(target, hop_label, hop_number_label)
+            self._safe_remove_hop_series(target, hop_label, hop_number_label)
 
         self._seen_labels[target] = active_labels
 

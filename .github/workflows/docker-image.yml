@@ -34,19 +34,3 @@ jobs:
           TAG="${GITHUB_REF#refs/tags/}"
           docker tag ownercz/prometheus-traceroute-exporter:latest ownercz/prometheus-traceroute-exporter:${TAG}
           docker push ownercz/prometheus-traceroute-exporter:${TAG}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@v4
-
-      - name: Docker | Login
-        run: |
-          echo "${{ secrets.DOCKERHUB_GITEA_TOKEN }}" | docker login -u ownercz --password-stdin
-
-      - name: Docker | Build image
-        run: |
-          docker build -t ownercz/prometheus-traceroute-exporter:latest .
-
-      - name: Docker | Push image latest
-        run: |
-          docker push ownercz/prometheus-traceroute-exporter:latest
