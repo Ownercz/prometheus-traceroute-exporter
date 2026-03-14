@@ -1,0 +1,16 @@
+services:
+  prometheus-traceroute-exporter:
+    build: .
+    container_name: prometheus-traceroute-exporter
+    restart: unless-stopped
+    cap_add:
+      - NET_RAW
+    ports:
+      - "9888:9888"
+    volumes:
+      - ./config.yml:/etc/prometheus-traceroute-exporter/config.yml:ro
+    environment:
+      - CONFIG_PATH=/etc/prometheus-traceroute-exporter/config.yml
+      - LISTEN_ADDRESS=0.0.0.0
+      - LISTEN_PORT=9888
+      - LOG_LEVEL=INFO

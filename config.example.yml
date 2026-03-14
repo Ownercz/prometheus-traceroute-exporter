@@ -1,0 +1,24 @@
+global:
+  # Default interval for all targets unless overridden.
+  default_interval_seconds: 60
+
+  # Optional default mtr settings for all targets.
+  mtr:
+    report_cycles: 5
+    max_hops: 30
+    timeout_seconds: 2
+    no_dns: true
+
+targets:
+  - name: cloudflare_dns
+    host: 1.1.1.1
+    interval_seconds: 30
+    mtr:
+      report_cycles: 5
+      max_hops: 30
+      timeout_seconds: 2
+      no_dns: true
+
+  - name: google_dns
+    host: 8.8.8.8
+    # Uses global defaults.
