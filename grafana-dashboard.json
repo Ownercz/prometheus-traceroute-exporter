@@ -1,0 +1,902 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "9.0.0"
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "bargauge",
+      "name": "Bar gauge",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "grafana", "uid": "-- Grafana --" },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Network path quality dashboard powered by prometheus-traceroute-exporter (mtr/traceroute metrics)",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "panels": [
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "mappings": [
+            {
+              "options": {
+                "0": { "color": "red", "index": 0, "text": "DOWN" },
+                "1": { "color": "green", "index": 1, "text": "UP" }
+              },
+              "type": "value"
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "red", "value": null },
+              { "color": "green", "value": 1 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 17 },
+      "id": 1,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "prometheus_traceroute_exporter_target_up{target=~\"$target\"}",
+          "instant": true,
+          "legendFormat": "{{target}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Target Status",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "text", "value": null }]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 17 },
+      "id": 2,
+      "options": {
+        "colorMode": "none",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "prometheus_traceroute_exporter_target_hop_count{target=~\"$target\"}",
+          "instant": true,
+          "legendFormat": "{{target}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Hop Count",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "unit": "s",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 10 },
+              { "color": "red", "value": 30 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 17 },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "prometheus_traceroute_exporter_target_last_duration_seconds{target=~\"$target\"}",
+          "instant": true,
+          "legendFormat": "{{target}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Last Scrape Duration",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "red", "value": 5 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 17 },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "textMode": "auto"
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "prometheus_traceroute_exporter_scrape_errors_total{target=~\"$target\"}",
+          "legendFormat": "{{target}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Scrape Errors (total)",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 21 },
+      "id": 10,
+      "panels": [],
+      "title": "Latency per Hop",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "ms",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 22 },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": ["mean", "max", "lastNotNull"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "asc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "prometheus_traceroute_exporter_avg{target=~\"$target\",hop!=\"$unknown_hops\"}",
+          "legendFormat": "{{target}} #{{hop_number}} {{hop}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Average Latency per Hop",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "ms",
+          "custom": {
+            "lineWidth": 1,
+            "fillOpacity": 5,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 22 },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": ["mean", "lastNotNull"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "asc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "prometheus_traceroute_exporter_ping{target=~\"$target\",hop!=\"$unknown_hops\"}",
+          "legendFormat": "{{target}} #{{hop_number}} {{hop}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Last Ping per Hop",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 31 },
+      "id": 20,
+      "panels": [],
+      "title": "Best / Worst Latency",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "ms",
+          "custom": {
+            "lineWidth": 1,
+            "fillOpacity": 5,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 32 },
+      "id": 21,
+      "options": {
+        "legend": {
+          "calcs": ["min", "lastNotNull"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "asc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "prometheus_traceroute_exporter_best{target=~\"$target\",hop!=\"$unknown_hops\"}",
+          "legendFormat": "{{target}} #{{hop_number}} {{hop}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Best Latency per Hop",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "ms",
+          "custom": {
+            "lineWidth": 1,
+            "fillOpacity": 5,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 32 },
+      "id": 22,
+      "options": {
+        "legend": {
+          "calcs": ["max", "lastNotNull"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "asc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "prometheus_traceroute_exporter_worst{target=~\"$target\",hop!=\"$unknown_hops\"}",
+          "legendFormat": "{{target}} #{{hop_number}} {{hop}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Worst Latency per Hop",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 41 },
+      "id": 30,
+      "panels": [],
+      "title": "Packet Loss & Jitter",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "percentunit",
+          "min": 0,
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 10,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 9, "w": 12, "x": 0, "y": 42 },
+      "id": 31,
+      "options": {
+        "legend": {
+          "calcs": ["mean", "max", "lastNotNull"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "asc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "prometheus_traceroute_exporter_loss_ratio{target=~\"$target\",hop!=\"$unknown_hops\"}",
+          "legendFormat": "{{target}} #{{hop_number}} {{hop}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Packet Loss per Hop",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "palette-classic" },
+          "unit": "ms",
+          "custom": {
+            "lineWidth": 2,
+            "fillOpacity": 5,
+            "showPoints": "never"
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 9, "w": 12, "x": 12, "y": 42 },
+      "id": 32,
+      "options": {
+        "legend": {
+          "calcs": ["mean", "max", "lastNotNull"],
+          "displayMode": "table",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": { "mode": "multi", "sort": "asc" }
+      },
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "prometheus_traceroute_exporter_stdev{target=~\"$target\",hop!=\"$unknown_hops\"}",
+          "legendFormat": "{{target}} #{{hop_number}} {{hop}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Jitter (StDev) per Hop",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 51 },
+      "id": 40,
+      "panels": [],
+      "title": "Current Hop Snapshot",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": "auto",
+            "displayMode": "auto",
+            "inspect": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [{ "color": "green", "value": null }]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Avg (ms)" },
+            "properties": [
+              { "id": "unit", "value": "ms" },
+              { "id": "decimals", "value": 2 },
+              { "id": "custom.displayMode", "value": "color-background-gradient" },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    { "color": "green", "value": null },
+                    { "color": "yellow", "value": 50 },
+                    { "color": "red", "value": 150 }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Loss (%)" },
+            "properties": [
+              { "id": "unit", "value": "percentunit" },
+              { "id": "decimals", "value": 1 },
+              { "id": "custom.displayMode", "value": "color-background-gradient" },
+              {
+                "id": "thresholds",
+                "value": {
+                  "mode": "absolute",
+                  "steps": [
+                    { "color": "green", "value": null },
+                    { "color": "yellow", "value": 0.01 },
+                    { "color": "red", "value": 0.05 }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Best (ms)" },
+            "properties": [{ "id": "unit", "value": "ms" }, { "id": "decimals", "value": 2 }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Worst (ms)" },
+            "properties": [{ "id": "unit", "value": "ms" }, { "id": "decimals", "value": 2 }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Last (ms)" },
+            "properties": [{ "id": "unit", "value": "ms" }, { "id": "decimals", "value": 2 }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Jitter (ms)" },
+            "properties": [{ "id": "unit", "value": "ms" }, { "id": "decimals", "value": 2 }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Sent" },
+            "properties": [{ "id": "decimals", "value": 0 }]
+          }
+        ]
+      },
+      "gridPos": { "h": 12, "w": 24, "x": 0, "y": 52 },
+      "id": 41,
+      "options": {
+        "cellHeight": "sm",
+        "footer": { "countRows": false, "fields": "", "reducer": ["sum"], "show": false },
+        "showHeader": true
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "prometheus_traceroute_exporter_avg{target=~\"$target\",hop!=\"$unknown_hops\"}",
+          "format": "table",
+          "instant": true,
+          "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "prometheus_traceroute_exporter_best{target=~\"$target\",hop!=\"$unknown_hops\"}",
+          "format": "table",
+          "instant": true,
+          "refId": "B"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "prometheus_traceroute_exporter_worst{target=~\"$target\",hop!=\"$unknown_hops\"}",
+          "format": "table",
+          "instant": true,
+          "refId": "C"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "prometheus_traceroute_exporter_ping{target=~\"$target\",hop!=\"$unknown_hops\"}",
+          "format": "table",
+          "instant": true,
+          "refId": "D"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "prometheus_traceroute_exporter_stdev{target=~\"$target\",hop!=\"$unknown_hops\"}",
+          "format": "table",
+          "instant": true,
+          "refId": "E"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "prometheus_traceroute_exporter_loss_ratio{target=~\"$target\",hop!=\"$unknown_hops\"}",
+          "format": "table",
+          "instant": true,
+          "refId": "F"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "prometheus_traceroute_exporter_sent{target=~\"$target\",hop!=\"$unknown_hops\"}",
+          "format": "table",
+          "instant": true,
+          "refId": "G"
+        }
+      ],
+      "title": "Current Hop Snapshot",
+      "transformations": [
+        { "id": "merge", "options": {} },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Time": true,
+              "__name__": true,
+              "job": true,
+              "instance": true
+            },
+            "indexByName": {
+              "target": 0,
+              "hop_number": 1,
+              "hop": 2,
+              "Value #A": 3,
+              "Value #D": 4,
+              "Value #B": 5,
+              "Value #C": 6,
+              "Value #E": 7,
+              "Value #F": 8,
+              "Value #G": 9
+            },
+            "renameByName": {
+              "target": "Target",
+              "hop_number": "Hop #",
+              "hop": "Host",
+              "Value #A": "Avg (ms)",
+              "Value #B": "Best (ms)",
+              "Value #C": "Worst (ms)",
+              "Value #D": "Last (ms)",
+              "Value #E": "Jitter (ms)",
+              "Value #F": "Loss (%)",
+              "Value #G": "Sent"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": [
+              { "desc": false, "displayName": "Target" },
+              { "desc": false, "displayName": "Hop #" }
+            ]
+          }
+        }
+      ],
+      "type": "table"
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 0 },
+      "id": 50,
+      "panels": [],
+      "title": "Path Summary (Current Snapshot)",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1,
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 0.01 },
+              { "color": "red", "value": 0.05 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 1 },
+      "id": 51,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "sort": "none",
+        "showUnfilled": false,
+        "minVizHeight": 16,
+        "minVizWidth": 8
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "label_replace(prometheus_traceroute_exporter_loss_ratio{target=~\"$target\",hop!=\"$unknown_hops\"}, \"hopn\", \"$1\", \"hop_number\", \"^([0-9][0-9]+)$\") or label_replace(prometheus_traceroute_exporter_loss_ratio{target=~\"$target\",hop!=\"$unknown_hops\"}, \"hopn\", \"0$1\", \"hop_number\", \"^([0-9])$\")",
+          "instant": true,
+          "legendFormat": "{{target}} #{{hopn}} {{hop}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Path Packet Loss by Hop (current)",
+      "type": "bargauge"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "unit": "ms",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 50 },
+              { "color": "red", "value": 150 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 1 },
+      "id": 52,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "sort": "none",
+        "showUnfilled": false,
+        "minVizHeight": 16,
+        "minVizWidth": 8
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "label_replace(prometheus_traceroute_exporter_avg{target=~\"$target\",hop!=\"$unknown_hops\"}, \"hopn\", \"$1\", \"hop_number\", \"^([0-9][0-9]+)$\") or label_replace(prometheus_traceroute_exporter_avg{target=~\"$target\",hop!=\"$unknown_hops\"}, \"hopn\", \"0$1\", \"hop_number\", \"^([0-9])$\")",
+          "instant": true,
+          "legendFormat": "{{target}} #{{hopn}} {{hop}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Path Average Latency by Hop (current)",
+      "type": "bargauge"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "unit": "ms",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 20 },
+              { "color": "red", "value": 60 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 9 },
+      "id": 53,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "sort": "none",
+        "showUnfilled": false,
+        "minVizHeight": 16,
+        "minVizWidth": 8
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "label_replace(prometheus_traceroute_exporter_stdev{target=~\"$target\",hop!=\"$unknown_hops\"}, \"hopn\", \"$1\", \"hop_number\", \"^([0-9][0-9]+)$\") or label_replace(prometheus_traceroute_exporter_stdev{target=~\"$target\",hop!=\"$unknown_hops\"}, \"hopn\", \"0$1\", \"hop_number\", \"^([0-9])$\")",
+          "instant": true,
+          "legendFormat": "{{target}} #{{hopn}} {{hop}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Path Jitter (StDev) by Hop (current)",
+      "type": "bargauge"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "unit": "ms",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 80 },
+              { "color": "red", "value": 200 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 9 },
+      "id": 54,
+      "options": {
+        "displayMode": "gradient",
+        "orientation": "horizontal",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false },
+        "sort": "none",
+        "showUnfilled": false,
+        "minVizHeight": 16,
+        "minVizWidth": 8
+      },
+      "pluginVersion": "10.0.0",
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+          "expr": "label_replace(prometheus_traceroute_exporter_worst{target=~\"$target\",hop!=\"$unknown_hops\"}, \"hopn\", \"$1\", \"hop_number\", \"^([0-9][0-9]+)$\") or label_replace(prometheus_traceroute_exporter_worst{target=~\"$target\",hop!=\"$unknown_hops\"}, \"hopn\", \"0$1\", \"hop_number\", \"^([0-9])$\")",
+          "instant": true,
+          "legendFormat": "{{target}} #{{hopn}} {{hop}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Path Worst Latency by Hop (current)",
+      "type": "bargauge"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 38,
+  "tags": ["traceroute", "network", "mtr", "prometheus"],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "hide": 0,
+        "includeAll": false,
+        "label": "Datasource",
+        "multi": false,
+        "name": "DS_PROMETHEUS",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "type": "datasource"
+      },
+      {
+        "allValue": ".+",
+        "current": {},
+        "datasource": { "type": "prometheus", "uid": "${DS_PROMETHEUS}" },
+        "definition": "label_values(prometheus_traceroute_exporter_target_up, target)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Target",
+        "multi": true,
+        "name": "target",
+        "options": [],
+        "query": {
+          "query": "label_values(prometheus_traceroute_exporter_target_up, target)",
+          "refId": "StandardVariableQuery"
+        },
+        "refresh": 2,
+        "regex": "",
+        "sort": 1,
+        "type": "query"
+      },
+      {
+        "current": { "selected": true, "text": "Exclude", "value": "???" },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Unknown hops (???)",
+        "multi": false,
+        "name": "unknown_hops",
+        "options": [
+          { "selected": true, "text": "Exclude", "value": "???" },
+          { "selected": false, "text": "Include", "value": "__never_match__" }
+        ],
+        "query": "Exclude : ???, Include : __never_match__",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": { "from": "now-1h", "to": "now" },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Traceroute Exporter",
+  "uid": "traceroute-exporter-v1",
+  "version": 1
+}
